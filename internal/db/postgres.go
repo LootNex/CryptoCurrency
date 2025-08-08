@@ -6,9 +6,10 @@ import (
 
 	"github.com/LootNex/CryptoCurrency/config"
 	_ "github.com/lib/pq"
+	"go.uber.org/zap"
 )
 
-func InitPostgres(config *config.Config) (*sql.DB, error) {
+func InitPostgres(config *config.Config, logger *zap.Logger) (*sql.DB, error) {
 
 	strConn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Postgres.Host, config.Postgres.Port, config.Postgres.User, config.Postgres.Password, config.Postgres.DBname)
@@ -23,9 +24,9 @@ func InitPostgres(config *config.Config) (*sql.DB, error) {
 		return nil, fmt.Errorf("ping err %v", err)
 	}
 
-	fmt.Println("Posgres successfully connected!")
+	logger.Info("Posgres successfully connected!")
 
-	err = RunMigrations(db)
+	err = RunMigrations(db, logger)
 	if err != nil {
 		return nil, fmt.Errorf("migrations err %v", err)
 	}

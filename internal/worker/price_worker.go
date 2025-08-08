@@ -6,15 +6,18 @@ import (
 	"time"
 
 	"github.com/LootNex/CryptoCurrency/internal/service"
+	"go.uber.org/zap"
 )
 
 type WokerPrice struct {
-	ser service.CryptoManager
+	ser    service.CryptoManager
+	logger *zap.Logger
 }
 
-func NewWokerPrice(serv service.CryptoManager) *WokerPrice {
+func NewWokerPrice(serv service.CryptoManager, logger *zap.Logger) *WokerPrice {
 	return &WokerPrice{
-		ser: serv,
+		ser:    serv,
+		logger: logger,
 	}
 }
 
@@ -26,13 +29,15 @@ func (w *WokerPrice) PriceUpdateWoker(ctx context.Context, interval time.Duratio
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println("Updating running")
+			w.logger.Info("Updating running")
 			if err := w.ser.UpdatePrice(); err != nil {
-				fmt.Printf("updateprice woker err: %v\n", err)
+				if err.Error() != "no crypto_names" {
+					w.logger.Error(fmt.Sprintf("updateprice woker err: %v\n", err))
+				}
 			}
-			fmt.Println("Updating stopped")
+			w.logger.Info("Updating stopped")
 		case <-ctx.Done():
-			fmt.Println("Stoppping price update")
+			w.logger.Info("Stoppping price update")
 			return nil
 		}
 	}

@@ -7,9 +7,10 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"go.uber.org/zap"
 )
 
-func RunMigrations(db *sql.DB) error {
+func RunMigrations(db *sql.DB, logger *zap.Logger) error {
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to create migration driver: %v", err)
@@ -26,6 +27,6 @@ func RunMigrations(db *sql.DB) error {
 		return fmt.Errorf("migration failed: %v", err)
 	}
 
-	fmt.Println("Migrations applied successfully")
+	logger.Info("Migrations applied successfully")
 	return nil
 }

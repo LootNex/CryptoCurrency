@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"math"
 	"time"
 
@@ -74,7 +73,6 @@ func (c CryptoService) UpdatePrice() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("!!", currency_name, price)
 
 		if math.Abs(prev_price-price) > prev_price*0.01 {
 			err = c.db.UpdatePrice(currency_name, price, Tnow)

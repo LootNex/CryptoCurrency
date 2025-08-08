@@ -12,3 +12,8 @@ type GetCurrencyPriceRequest struct {
 type GetCurrencyPriceResponse struct {
 	Price float64 `json:"price"`
 }
+
+type AD_REsponse struct {
+	Status string `json:"status"`
+	Coin   string `json:"coin"`
+}
