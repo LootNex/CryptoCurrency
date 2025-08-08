@@ -68,6 +68,7 @@ curl -X GET http://localhost:8080/currency/price -d '{"coin": "bitcoin", "timest
 
 3. Удаление криптовалюты
 curl -X DELETE http://localhost:8080/currency/remove -d '{"coin": "bitcoin"}' -H "Content-Type: application/json"
+
 Ответ:
 {
   "status": "deleted",
